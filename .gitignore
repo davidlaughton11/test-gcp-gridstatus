@@ -1,0 +1,6 @@
+venv/
+.env
+__pycache__/
+gcp-sa-key.json
+data_local/
+old/
