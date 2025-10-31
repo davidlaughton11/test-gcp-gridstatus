@@ -4,3 +4,6 @@ __pycache__/
 gcp-sa-key.json
 data_local/
 old/
+# Jupyter checkpoints
+.ipynb_checkpoints/
+outputs/
