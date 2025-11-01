@@ -22,11 +22,7 @@ COPY --chown=appuser:appuser . /home/appuser/work
 RUN python -m venv /home/appuser/venv && \
     . /home/appuser/venv/bin/activate && \
     pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install google-cloud-storage pandas pyarrow notebook nbconvert
+    pip install -r requirements.txt
 
-# ---- Default command --------------------------------------------
-CMD ["/bin/bash", "-c", "\
-    . /home/appuser/venv/bin/activate && \
-    jupyter nbconvert --to notebook --execute --inplace 2025-10-29-Test_v2.ipynb \
-    && echo '=== Notebook finished ==='"]
+ENTRYPOINT ["/home/appuser/venv/bin/python", "-m", "app.main"]
+CMD []
