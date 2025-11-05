@@ -1,0 +1,13 @@
+# Local dev
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# tests
+tests/
+*.parquet
+data_local/
+
+# API keys
+gcp-sa-key.json

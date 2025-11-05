@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "gridstatus"
+version = "0.1.0"
+description = "PJM LMP data pipeline"
+authors = ["David Laughton <david.laughton@queensu.ca>"]
+readme = "README.md"
+packages = [{include = "app", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pandas = "^2.2"
+google-cloud-storage = "^2.18"
+pyarrow = "^17.0"
+gridstatusio = "^0.15.0"
+python-dotenv = "^1.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3"
+pytest-mock = "^3.14"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

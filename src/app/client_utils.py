@@ -41,7 +41,6 @@ def fetch_pjm_data(start, end, query_limit=100):
 
 def upload_to_gcs(df, bucket_name, dest_blob):
     """Upload a DataFrame to GCS as a Parquet file (in-memory)."""
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gcp-sa-key.json"
     client = storage.Client()
     bucket = client.bucket(bucket_name)
     blob = bucket.blob(dest_blob)
@@ -52,3 +51,18 @@ def upload_to_gcs(df, bucket_name, dest_blob):
 
     blob.upload_from_file(buffer, content_type="application/octet-stream")
     print(f"Uploaded DataFrame to gs://{bucket_name}/{dest_blob}")
+
+
+def read_from_gcs(bucket_name, source_blob):
+    """Read a Parquet file from GCS into a Pandas DataFrame."""
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(source_blob)
+
+    buffer = BytesIO()
+    blob.download_to_file(buffer)
+    buffer.seek(0)
+
+    df = pd.read_parquet(buffer)
+    print(f"Read DataFrame from gs://{bucket_name}/{source_blob}")
+    return df

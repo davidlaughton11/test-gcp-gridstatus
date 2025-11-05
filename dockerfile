@@ -6,23 +6,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         git wget libglib2.0-0 libsm6 libxext6 libxrender1 \
     && rm -rf /var/lib/apt/lists/*
 
-# ---- Non-root user ----------------------------------------------
-ARG UID=1000
-ARG GID=1000
-RUN groupadd -g ${GID} appuser && \
-    useradd -m -u ${UID} -g ${GID} -s /bin/bash appuser
-
+# ---- Create user and working directory --------------------------
+RUN useradd -m appuser
 WORKDIR /home/appuser/work
+
+# ---- Install Poetry (as root, in one layer) --------------------
+RUN pip install --no-cache-dir poetry \
+    && poetry config virtualenvs.create false
+
+# ---- Copy only the files Poetry needs for caching ---------------
+COPY --chown=appuser:appuser pyproject.toml poetry.lock* ./
+
+# ---- Install production deps only (no test group) ---------------
+RUN poetry install --only main --no-root
+
+# ---- Switch to non-root user ------------------------------------
 USER appuser
 
-# ---- Copy project -----------------------------------------------
-COPY --chown=appuser:appuser . /home/appuser/work
+# ---- Copy source code -------------------------------------------
+COPY --chown=appuser:appuser src ./src
 
-# ---- Install dependencies ---------------------------------------
-RUN python -m venv /home/appuser/venv && \
-    . /home/appuser/venv/bin/activate && \
-    pip install --upgrade pip && \
-    pip install -r requirements.txt
+WORKDIR /home/appuser/work/src
 
-ENTRYPOINT ["/home/appuser/venv/bin/python", "-m", "app.main"]
+# ---- Entrypoint and default command -----------------------------
+ENTRYPOINT ["python", "-m", "app.main"]
 CMD []

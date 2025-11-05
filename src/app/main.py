@@ -9,10 +9,19 @@ def main():
     parser.add_argument("--end", default="2025-10-28", help="End date (YYYY-MM-DD)")
     parser.add_argument("--output", default="data_local/results.parquet", help="Local output Parquet file name")
     parser.add_argument("--upload", action="store_true", help="Upload to GCS if provided")
+    parser.add_argument("--read", action="store_true", help="Read Parquet file from GCS instead of fetching new data")
     parser.add_argument("--bucket", default="my-data-bucket-davidl", help="GCS bucket name")
     parser.add_argument("--dest", default="results/pjm_LMP_data.parquet", help="Destination path in GCS")
 
     args = parser.parse_args()
+
+    # If reading from GCS
+    if args.read:
+        print(f"Reading data from gs://{args.bucket}/{args.dest} ...")
+        df = read_from_gcs(args.bucket, args.dest)
+        df.to_parquet(args.output, index=False)
+        print(f"✅ Data read from GCS and saved locally to {args.output}")
+        return
 
     # Fetch data
     df = fetch_pjm_data(args.start, args.end)
