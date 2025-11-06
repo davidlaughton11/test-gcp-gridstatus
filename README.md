@@ -12,16 +12,20 @@ built a pytest dependancy to check the read_from_gcs function locally without ma
 Learned through back and forth iteration:
 containerization (with docker and control paths), api calls, cloud storage and GCS set up, CLI tooling, and testings with pytest
 
-Folder structure:
+## Folder Structure
+```text
 .
 ├── src/
 │   └── app/
-│       ├── main.py          ← CLI entrypoint (argparse)
-│       └── client_utils.py  ← fetch, upload, read from GCS
-├── data_local/              ← output Parquet files
-├── tests/                   ← local pytests (not in Docker)
-├── pyproject.toml           ← Poetry deps (pandas, gridstatusio, etc.)
-├── .env                     ← GRIDSTATUS_API_KEY
-├── gcp-sa-key.json          ← GCP service account key
-├── Dockerfile               ← builds production image
+│       ├── main.py             ← CLI entrypoint (argparse)
+│       └── client_utils.py     ← fetch, upload, read from GCS
+│
+├── data_local/                 ← output Parquet files
+│
+├── tests/                      ← local pytests (not in Docker)
+│
+├── pyproject.toml              ← Poetry dependencies (pandas, gridstatusio, etc.)
+├── .env                        ← GRIDSTATUS_API_KEY
+├── gcp-sa-key.json             ← GCP service account key
+├── Dockerfile                  ← builds production image
 └── README.md
